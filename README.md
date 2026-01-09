@@ -1,17 +1,17 @@
 # Kubernetes Blockchain Authentication
 
-Système d'authentification et d'autorisation (RBAC) pour Kubernetes basé sur la blockchain Ethereum.
+Ethereum blockchain-based authentication and authorization (RBAC) system for Kubernetes.
 
 ## 🎯 Concept
 
-Utilisez des **wallets Ethereum comme identité** pour accéder à Kubernetes, avec des permissions stockées dans un smart contract.
+Use **Ethereum wallets as identity** to access Kubernetes, with permissions stored in a smart contract.
 
-**Avantages:**
-- ✅ Décentralisé et auditable
-- ✅ Pas de base de données centralisée
-- ✅ Permissions immuables et traçables
-- ✅ Cryptographie forte (ECDSA)
-- ✅ Support des permissions temporaires
+**Benefits:**
+- ✅ Decentralized and auditable
+- ✅ No centralized database
+- ✅ Immutable and traceable permissions
+- ✅ Strong cryptography (ECDSA)
+- ✅ Support for temporary permissions
 
 ## 🚀 Quick Start
 
@@ -19,42 +19,42 @@ Utilisez des **wallets Ethereum comme identité** pour accéder à Kubernetes, a
 # 1. Installation
 make setup
 
-# 2. Démarrer blockchain locale + déployer contract
+# 2. Start local blockchain + deploy contract
 make dev-start
 
-# 3. (Nouveau terminal) Démarrer API server
+# 3. (New terminal) Start API server
 make dev-run
 
-# 4. Onboarder un utilisateur
+# 4. Onboard a user
 make onboard-user
 ```
 
-**C'est tout!** Le système gère automatiquement les configurations via `.env`.
+**That's it!** The system automatically manages configuration via `.env`.
 
 ## 📚 Documentation
 
-- **[QUICKSTART.md](QUICKSTART.md)** - Démarrage rapide et workflow seamless
-- **[RBAC-GUIDE.md](RBAC-GUIDE.md)** - Guide complet RBAC et onboarding
-- **[README-SEAMLESS.md](README-SEAMLESS.md)** - Détails du système de configuration automatique
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick start and seamless workflow
+- **[RBAC-GUIDE.md](RBAC-GUIDE.md)** - Complete RBAC and onboarding guide
+- **[README-SEAMLESS.md](README-SEAMLESS.md)** - Automatic configuration system details
 
 ## 🎯 Use Cases
 
-### Utilisateurs
+### Users
 
 ```bash
 make onboard-user
-# → Crée wallet
-# → Assigne permissions (Admin/Dev/ReadOnly/Custom)
-# → Génère credentials sécurisées
+# → Creates wallet
+# → Assigns permissions (Admin/Dev/ReadOnly/Custom)
+# → Generates secure credentials
 ```
 
-### Applications CI/CD
+### CI/CD Applications
 
 ```bash
 make onboard-app
-# → Crée wallet pour l'app
-# → Permissions spécifiques (deploy, monitoring, etc.)
-# → Génère config GitLab CI / GitHub Actions
+# → Creates wallet for the app
+# → Specific permissions (deploy, monitoring, etc.)
+# → Generates GitLab CI / GitHub Actions config
 ```
 
 ## 🏗️ Architecture
@@ -68,202 +68,202 @@ User/App → JWT Token (signed with wallet)
          → Allow/Deny
 ```
 
-## 🔐 Sécurité
+## 🔐 Security
 
-- **Wallets Ethereum** comme identité unique
-- **Signatures ECDSA** pour l'authentification
-- **Smart contract** pour les permissions (immuable, auditable)
-- **Pas de mots de passe** à gérer
-- **Permissions temporaires** avec expiration
-- **Principe du moindre privilège** par défaut
+- **Ethereum wallets** as unique identity
+- **ECDSA signatures** for authentication
+- **Smart contract** for permissions (immutable, auditable)
+- **No passwords** to manage
+- **Temporary permissions** with expiration
+- **Least privilege principle** by default
 
-## 📋 Permissions RBAC
+## 📋 RBAC Permissions
 
-Format flexible:
+Flexible format:
 
 ```bash
 Namespaces: [dev, staging, prod, *]
 Verbs: [get, list, create, update, delete, watch, *]
 Resources: [pods, services, deployments, configmaps, secrets, *]
-ExpiresAt: timestamp Unix ou 0 (jamais)
+ExpiresAt: Unix timestamp or 0 (never)
 ```
 
-Exemples de profils:
+Example profiles:
 - **Admin**: `*, *, *`
 - **Developer**: `dev,staging`, `*`, `*`
 - **CI/CD**: `prod`, `get,list,create,update`, `deployments,services`
 - **Monitoring**: `*`, `get,list,watch`, `pods,nodes,services`
 - **ReadOnly**: `*`, `get,list`, `*`
 
-## 🛠️ Commandes Principales
+## 🛠️ Main Commands
 
 ```bash
 # Setup & Dev
-make setup              # Installation complète
+make setup              # Complete installation
 make dev-start          # Blockchain + contract deployment
 make dev-run            # API server
-make info               # Voir configuration actuelle
+make info               # View current configuration
 
 # Onboarding
-make onboard-user       # Onboarding utilisateur (interactif)
-make onboard-app        # Onboarding application (interactif)
+make onboard-user       # User onboarding (interactive)
+make onboard-app        # Application onboarding (interactive)
 
 # Wallet & Permissions
-make wallet-create      # Créer wallet (sauvegarde auto dans .env)
-make wallet-grant       # Accorder permissions
-make wallet-test        # Tester authentification
+make wallet-create      # Create wallet (auto-saved to .env)
+make wallet-grant       # Grant permissions
+make wallet-test        # Test authentication
 
 # Kubernetes
-make k8s-deploy         # Déployer sur K8s
-make k8s-status         # Statut
+make k8s-deploy         # Deploy to K8s
+make k8s-status         # Status
 make k8s-logs           # Logs
 
 # Utilities
-make help               # Toutes les commandes
+make help               # All commands
 make test               # Tests
-make clean              # Nettoyer
+make clean              # Clean
 ```
 
-## 📁 Structure du Projet
+## 📁 Project Structure
 
 ```
 ├── cmd/
-│   ├── apiserver/           # Serveur d'authentification K8s
-│   ├── kubectl-wallet/      # Plugin kubectl pour wallets
-│   └── permission-manager/  # CLI gestion permissions
+│   ├── apiserver/           # K8s authentication server
+│   ├── kubectl-wallet/      # kubectl plugin for wallets
+│   └── permission-manager/  # Permissions management CLI
 ├── contracts/
-│   ├── contracts/           # Smart contracts Solidity
-│   └── migrations/          # Scripts de déploiement
+│   ├── contracts/           # Solidity smart contracts
+│   └── migrations/          # Deployment scripts
 ├── pkg/
-│   ├── authenticator/       # Logique d'authentification
-│   ├── blockchain/          # Client blockchain + bindings
-│   └── apiserver/           # Serveur HTTP
+│   ├── authenticator/       # Authentication logic
+│   ├── blockchain/          # Blockchain client + bindings
+│   └── apiserver/           # HTTP server
 ├── deployments/
-│   └── kubernetes/          # Manifests K8s
+│   └── kubernetes/          # K8s manifests
 ├── scripts/
-│   ├── onboard-user.sh      # Onboarding utilisateur
-│   ├── onboard-app.sh       # Onboarding application
-│   └── test-auth.sh         # Test authentification
+│   ├── onboard-user.sh      # User onboarding
+│   ├── onboard-app.sh       # Application onboarding
+│   └── test-auth.sh         # Authentication test
 ├── examples/
 │   ├── kubectl-config-example.yaml
 │   ├── gitlab-ci-example.yml
 │   └── github-actions-example.yml
-├── Makefile                 # Commandes principales
-├── QUICKSTART.md            # Guide démarrage rapide
-└── RBAC-GUIDE.md            # Guide RBAC complet
+├── Makefile                 # Main commands
+├── QUICKSTART.md            # Quick start guide
+└── RBAC-GUIDE.md            # Complete RBAC guide
 ```
 
-## 🎓 Exemples
+## 🎓 Examples
 
-### Exemple 1: Developer Onboarding
+### Example 1: Developer Onboarding
 
 ```bash
 # Admin
 make onboard-user
-# Nom: alice
-# Profil: 2 (Developer)
-# → Génère: onboarding/alice-wallet.txt
+# Name: alice
+# Profile: 2 (Developer)
+# → Generates: onboarding/alice-wallet.txt
 
-# Alice reçoit ses credentials
-# Configure kubectl avec sa clé privée
-kubectl get pods -n dev      # ✓ Autorisé
-kubectl get pods -n prod     # ✓ Lecture seule
-kubectl delete pod -n prod   # ✗ Refusé
+# Alice receives credentials
+# Configures kubectl with her private key
+kubectl get pods -n dev      # ✓ Allowed
+kubectl get pods -n prod     # ✓ Read-only
+kubectl delete pod -n prod   # ✗ Denied
 ```
 
-### Exemple 2: CI/CD Pipeline
+### Example 2: CI/CD Pipeline
 
 ```bash
 # DevOps
 make onboard-app
 # App: gitlab-ci
 # Type: 1 (CI/CD Pipeline)
-# → Génère: onboarding/gitlab-ci-credentials.env
+# → Generates: onboarding/gitlab-ci-credentials.env
 
-# Ajouter WALLET_PRIVATE_KEY dans GitLab CI secrets
-# Utiliser examples/gitlab-ci-example.yml
-# Pipeline peut maintenant déployer automatiquement
+# Add WALLET_PRIVATE_KEY to GitLab CI secrets
+# Use examples/gitlab-ci-example.yml
+# Pipeline can now deploy automatically
 ```
 
-### Exemple 3: Monitoring App
+### Example 3: Monitoring App
 
 ```bash
 # SRE
 make onboard-app
 # App: prometheus
 # Type: 2 (Monitoring)
-# → Permissions lecture seule sur tout
+# → Read-only permissions everywhere
 
-# Dans Prometheus
+# In Prometheus
 TOKEN=$(kubectl-wallet generate $WALLET_PRIVATE_KEY)
-# Utiliser TOKEN pour scraper les métriques K8s
+# Use TOKEN to scrape K8s metrics
 ```
 
 ## 🌟 Features
 
-- ✅ **Seamless Configuration** - Variables auto-sauvegardées dans `.env`
-- ✅ **Onboarding Interactif** - Scripts guidés pour users et apps
-- ✅ **Smart Contract RBAC** - Permissions sur blockchain
-- ✅ **Permissions Granulaires** - Par namespace, verb, resource
-- ✅ **Expiration Temporaire** - Permissions avec TTL
-- ✅ **Audit Trail** - Événements blockchain + logs
-- ✅ **Multi-tenant** - Support de plusieurs clusters
-- ✅ **CI/CD Ready** - Exemples GitLab CI et GitHub Actions
+- ✅ **Seamless Configuration** - Variables auto-saved to `.env`
+- ✅ **Interactive Onboarding** - Guided scripts for users and apps
+- ✅ **Smart Contract RBAC** - Permissions on blockchain
+- ✅ **Granular Permissions** - By namespace, verb, resource
+- ✅ **Temporary Expiration** - Permissions with TTL
+- ✅ **Audit Trail** - Blockchain events + logs
+- ✅ **Multi-tenant** - Multiple cluster support
+- ✅ **CI/CD Ready** - GitLab CI and GitHub Actions examples
 
-## 🔧 Développement
+## 🔧 Development
 
 ```bash
 # Tests
-make test               # Tests Go
-make test-contracts     # Tests smart contracts
+make test               # Go tests
+make test-contracts     # Smart contract tests
 
 # Format
-make fmt                # Format code Go
+make fmt                # Format Go code
 
 # Build
-make build              # Compiler binaires
-make contracts-compile  # Compiler smart contracts
+make build              # Compile binaries
+make contracts-compile  # Compile smart contracts
 ```
 
 ## 📊 Monitoring & Audit
 
 ```bash
-# Voir les logs du serveur
+# View server logs
 make k8s-logs
 
-# Statut du cluster
+# Cluster status
 make k8s-status
 
-# Événements blockchain
-# Via web3 explorer ou logs du contract
+# Blockchain events
+# Via web3 explorer or contract logs
 ```
 
-## 🤝 Contribution
+## 🤝 Contributing
 
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/amazing`)
+1. Fork the project
+2. Create a branch (`git checkout -b feature/amazing`)
 3. Commit (`git commit -m 'Add amazing feature'`)
 4. Push (`git push origin feature/amazing`)
-5. Ouvrir une Pull Request
+5. Open a Pull Request
 
 ## 📝 License
 
-MIT License - voir [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE)
 
 ## 🙋 Support
 
-- **Documentation**: Voir [QUICKSTART.md](QUICKSTART.md) et [RBAC-GUIDE.md](RBAC-GUIDE.md)
+- **Documentation**: See [QUICKSTART.md](QUICKSTART.md) and [RBAC-GUIDE.md](RBAC-GUIDE.md)
 - **Issues**: GitHub Issues
 - **Questions**: GitHub Discussions
 
 ## 🎯 Roadmap
 
-- [ ] Support multi-cluster
-- [ ] Dashboard web pour gestion permissions
-- [ ] Support d'autres blockchains (Polygon, BSC)
-- [ ] Intégration avec secrets managers
-- [ ] Support ABAC (Attribute-Based Access Control)
-- [ ] Helm chart officiel
+- [ ] Multi-cluster support
+- [ ] Web dashboard for permission management
+- [ ] Support for other blockchains (Polygon, BSC)
+- [ ] Integration with secrets managers
+- [ ] ABAC support (Attribute-Based Access Control)
+- [ ] Official Helm chart
 
 ---
 
