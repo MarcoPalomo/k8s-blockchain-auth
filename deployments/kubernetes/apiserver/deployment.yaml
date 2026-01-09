@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-auth-server
+  namespace: blockchain-auth
+  labels:
+    app: blockchain-auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blockchain-auth-server
+  template:
+    metadata:
+      labels:
+        app: blockchain-auth-server
+    spec:
+      containers:
+      - name: auth-server
+        image: k8s-blockchain-auth:latest
+        imagePullPolicy: Never  # Pour Minikube avec images locales
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: BLOCKCHAIN_RPC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: blockchain-auth-config
+              key: BLOCKCHAIN_RPC_URL
+        - name: CONTRACT_ADDRESS
+          valueFrom:
+            secretKeyRef:
+              name: blockchain-auth-secret
+              key: CONTRACT_ADDRESS
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: blockchain-auth-config
+              key: PORT
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL

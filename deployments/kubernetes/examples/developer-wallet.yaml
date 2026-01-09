@@ -1,0 +1,20 @@
+# Example: Developer wallet with limited permissions
+# This is a reference configuration - adjust for your needs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: developer-wallet-example
+  namespace: blockchain-auth
+data:
+  wallet-address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+  permissions: |
+    namespaces: ["default", "development"]
+    verbs: ["get", "list", "create", "update", "delete"]
+    resources: ["pods", "services", "deployments", "configmaps"]
+
+  # To grant these permissions, run:
+  # permission-manager grant 0xabcdefabcdefabcdefabcdefabcdefabcdefabcd \
+  #   default,development \
+  #   get,list,create,update,delete \
+  #   pods,services,deployments,configmaps

@@ -1,0 +1,17 @@
+# Example: Admin wallet with full permissions
+# This is a reference configuration - adjust for your needs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-wallet-example
+  namespace: blockchain-auth
+data:
+  wallet-address: "0x1234567890123456789012345678901234567890"
+  permissions: |
+    namespaces: ["*"]
+    verbs: ["*"]
+    resources: ["*"]
+
+  # To grant these permissions, run:
+  # permission-manager grant 0x1234567890123456789012345678901234567890 '*' '*' '*'

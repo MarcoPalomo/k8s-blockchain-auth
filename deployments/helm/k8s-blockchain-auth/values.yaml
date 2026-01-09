@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: k8s-blockchain-auth
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+blockchain:
+  rpcUrl: "http://localhost:8545"
+  contractAddress: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

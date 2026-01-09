@@ -1,0 +1,52 @@
+# Ignore les fichiers inutiles pour le build Docker
+
+# Binaires
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Tests
+*.test
+*.out
+coverage.txt
+
+# Dépendances
+vendor/
+
+# Contracts
+contracts/node_modules/
+contracts/cache/
+contracts/artifacts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environnement
+.env
+.env.local
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Déploiements
+deployments/kubernetes/
+deployments/helm/
+
+# Scripts
+scripts/
+
+# Divers
+.DS_Store
+Thumbs.db
